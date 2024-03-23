@@ -12,19 +12,13 @@ func main() {
 		log.Fatalf("failed to initialize files: %v", err)
 	}
 
-	// Parse the configuration file
-	config, err := files.ParseConfig()
-	if err != nil {
+	// Parse & validate the configuration file
+	if err := files.ParseConfig(); err != nil {
 		log.Fatalf("failed to parse config: %v", err)
 	}
 
-	// Verify configuration validity
-	if err := files.ValidateConfig(config); err != nil {
-		log.Fatalf("invalid configuration: %v", err)
-	}
-
 	// Start program
-	if err := discord.Start(config); err != nil {
+	if err := discord.Start(); err != nil {
 		log.Fatalf("error establishing connection: %v", err)
 	}
 }

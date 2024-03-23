@@ -1,6 +1,7 @@
 package discord
 
 import (
+	"Discord-Mass-DM/internal"
 	"fmt"
 	"log"
 	"strconv"
@@ -67,15 +68,46 @@ func messageMembers(s *discordgo.Session, selfUserID string, members []*discordg
 	clear()
 
 	// Iterate through all guild members, messaging all with open DMs
+members:
 	for i, m := range members {
 		// Skip self and bots
 		if m.User.ID == selfUserID || m.User.Bot {
-			continue
+			continue members
+		}
+
+		// Check if user passes role rules
+	roles:
+		for i, r := range m.Roles {
+			// Handle wildcard exclusion
+			hasWildcardExclude := false
+			for _, e := range internal.Config.Roles.Exclude {
+				if r == e {
+					continue members // Exclude explicitly
+				} else if e == "*" {
+					hasWildcardExclude = true
+					// Continue to check inclusion for potential override
+				}
+			}
+
+			// Handle wildcard inclusion and potential override
+			for _, i := range internal.Config.Roles.Include {
+				if r == i || i == "*" {
+					// Include, but respect exclusion if wildcard was present
+					if !hasWildcardExclude {
+						break roles // Pass if specifically included or wildcard included without exclusion
+					}
+				}
+			}
+
+			// If not explicitly included or excluded, and no wildcard inclusion, skip
+			if i == len(m.Roles)-1 {
+				continue members
+			}
 		}
 
 		// Pick a new message from the message pool
-		messageNo := i % len(messagePool)
-		message := messagePool[messageNo]
+		messageNo := i % len(internal.Config.MessagePool)
+		message := internal.Config.MessagePool[messageNo]
 
 		log.Printf("Sending message #%d to %s (%s)", messageNo+1, m.User.Username, m.User.ID)
 

@@ -8,27 +8,26 @@ import (
 )
 
 // Parses the config file and returns a Configuration struct
-func ParseConfig() (internal.Configuration, error) {
+func ParseConfig() error {
 	// Read configuration from file
 	f, err := os.ReadFile(configFilePath)
 	if err != nil {
-		return internal.Configuration{}, err
+		return err
 	}
 
 	// Parse the JSON contents of the file
-	configuration := internal.Configuration{}
-	if err = json.Unmarshal(f, &configuration); err != nil {
-		return internal.Configuration{}, err
+	if err = json.Unmarshal(f, &internal.Config); err != nil {
+		return err
 	}
 
-	return configuration, nil
+	return validateConfig()
 }
 
 // Ensures the provided configuration is valid
-func ValidateConfig(config internal.Configuration) error {
-	if config.DiscordToken == "" {
+func validateConfig() error {
+	if internal.Config.DiscordToken == "" {
 		return errors.New("no user token provided")
-	} else if len(config.MessagePool) == 0 {
+	} else if len(internal.Config.MessagePool) == 0 {
 		return errors.New("no messages provided in pool")
 	}
 

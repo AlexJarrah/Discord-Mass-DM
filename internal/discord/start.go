@@ -8,13 +8,10 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-// Initialize message pool as a global variable for handler function access
-var messagePool []string
-
 // Establish Discord connection via the provided token
-func Start(c internal.Configuration) error {
+func Start() error {
 	// Create a Discord session
-	dg, err := discordgo.New(c.DiscordToken)
+	dg, err := discordgo.New(internal.Config.DiscordToken)
 	if err != nil {
 		return err
 	}
@@ -25,8 +22,7 @@ func Start(c internal.Configuration) error {
 	// Update the session's user agent
 	dg.UserAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
 
-	messagePool = c.MessagePool // Update global variable
-	dg.AddHandler(ready)        // Add a ready handler
+	dg.AddHandler(ready) // Add a ready handler
 
 	// Open a websocket connection
 	if err := dg.Open(); err != nil {

@@ -1,4 +1,10 @@
 {
-  "discord_token":"",
-  "message_pool": []
+  "discord_token": "",
+  "message_pool": [],
+  "roles": {
+    "include": [
+      "*"
+    ],
+    "exclude": []
+  }
 }
