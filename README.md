@@ -22,7 +22,6 @@ cd Discord-Mass-DM
 1. Run the main script using the command:
 ```
 go run cmd/Discord-Mass-DM/main.go
-
 ```
 2. Follow the on-screen instructions to select the server and confirm the operation.
 
