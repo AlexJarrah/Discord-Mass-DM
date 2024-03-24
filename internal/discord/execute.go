@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -117,6 +118,13 @@ members:
 			log.Printf("Couldn't message %s: %v", m.User.Username, err)
 			continue
 		}
+
+		// Handle variables
+		message = strings.ReplaceAll(message, "$USERNAME", m.User.Username)
+		message = strings.ReplaceAll(message, "$USER_ID", m.User.ID)
+		message = strings.ReplaceAll(message, "$MENTION", m.User.Mention())
+		message = strings.ReplaceAll(message, "$NICK", m.Nick)
+		message = strings.ReplaceAll(message, "$AVATAR_URL", m.AvatarURL("512"))
 
 		// Send the message to the user
 		if _, err := s.ChannelMessageSend(userChannel.ID, message); err != nil {

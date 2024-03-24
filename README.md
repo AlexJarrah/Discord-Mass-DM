@@ -20,7 +20,12 @@ cd Discord-Mass-DM
     - Filter log by typing `url:discord.com/api` into the filter field near the top of the page
     - Click on any request (you might need to refresh the page)
     - Scroll down to the request headers section and find a header named "Authorization", this is your account token. Keep this token safe, do not share it with anyone.
-3. Populate the "message_pool" array with the messages you want to send. Each message should be a separate string within the array.
+3. Populate the "message_pool" array with the messages you want to send. Each message should be a separate string within the array. You can use the below variables to use member specific information:
+    - `$USERNAME`: Inserts the member's account username.
+    - `$NICK`: Inserts the member's server nickname, if set (ignored otherwise).
+    - `$USER_ID`: Inserts the member's unique account ID.
+    - `$MENTION`: Mentions (pings) the member.
+    - `$AVATAR_URL`: Inserts the URL to the member's profile picture.
 4. Modify the "roles" field with all roles you want to include or exclude to filter server members.
 
 ## Usage
